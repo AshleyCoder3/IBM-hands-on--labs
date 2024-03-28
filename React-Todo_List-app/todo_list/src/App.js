@@ -1,10 +1,25 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./App.css";
 
 const App = () => {
     // set state with getter and setter
     const [todos, setTodos] = useState([]);
     const [todoUpdate, setTodoUpdate] = useState(null);
+
+    // UseEffects tp save tasks into local storage
+    useEffect(() => {
+        const json = localStorage.getItem("todos");
+        const loadedTodos = JSON.parse(json);
+        if (loadedTodos) {
+            setTodos(loadedTodos);
+        }
+    }, []);
+    useEffect(() => {
+        if (todos.length > 0) {
+            const json = JSON.stringify(todos);
+            localStorage.setItem("todos", json);
+        }
+    }, [todos]);
 
     // Add new a task
     function handleSubmit(event) {
