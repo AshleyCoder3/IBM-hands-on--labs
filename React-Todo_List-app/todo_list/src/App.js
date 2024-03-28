@@ -4,6 +4,7 @@ import "./App.css";
 const App = () => {
     // set state with getter and setter
     const [todos, setTodos] = useState([]);
+    const [todoUpdate, setTodoUpdate] = useState(null);
 
     // Add new a task
     function handleSubmit(event) {
@@ -42,7 +43,18 @@ const App = () => {
         setTodos(updatedTodos);
     }
 
-    // Add the submitEdits code here
+    // Edit a task
+    function handleUpdate(newtodo) {
+        const updatedTodos = [...todos].map((todo) => {
+            if (todo.id === newtodo.id) {
+                todo.text = document.getElementById(newtodo.id).value;
+            }
+            return todo;
+        });
+
+        setTodos(updatedTodos);
+        setTodoUpdate(null);
+    }
 
 
     return (
@@ -57,12 +69,30 @@ const App = () => {
             </form>
             {todos.map((todo) =>
                 <div className="todo" key={todo.id}>
-                    <div className="todo-text"><
-                        input type="checkbox" id="completed" checked={todo.completed}
-                              onChange={() => toggleComplete(todo.id)}/>
-                        {todo.text}
+                    <div className="todo-text">
+                        <input type="checkbox" id="completed" checked={todo.completed}
+                               onChange={() => toggleComplete(todo.id)}/>
+                        {/* if it is edit mode, display input box, else display text */}
+                        {todo.id === todoUpdate ?
+                            (<input
+                                type="text"
+                                id={todo.id}
+                                defaultValue={todo.text}
+                            />) :
+                            (<div>{todo.text}</div>)
+                        }
                     </div>
-                    <button onClick={() => handleDelete(todo.id)}>Delete</button>
+                    <div className="todo-actions">
+                        {/* if it is edit mode, allow to submit edit, else allow edit */}
+                        {todo.id === todoUpdate ?
+                            (
+                                <button onClick={() => handleUpdate(todo)}>Submit Edits</button>
+                            ) :
+                            (
+                                <button onClick={() => setTodoUpdate(todo.id)}>Edit</button>
+                            )}
+                        <button onClick={() => handleDelete(todo.id)}>Delete</button>
+                    </div>
                 </div>)}
         </div>
     );
