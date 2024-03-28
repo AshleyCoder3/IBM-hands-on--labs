@@ -5,8 +5,7 @@ const App = () => {
     // set state with getter and setter
     const [todos, setTodos] = useState([]);
 
-    // Add the handlesubmit code here
-
+    // Add new a task
     function handleSubmit(event) {
         event.preventDefault();
 
@@ -25,14 +24,23 @@ const App = () => {
         document.getElementById('todoAdd').value = ""
     }
 
-    // Add the deleteToDo code here
+    // Delete a task
     function handleDelete(id) {
         let updatedTodos = [...todos].filter((todo) => todo.id !== id);
         setTodos(updatedTodos);
     }
 
-    // Add the toggleComplete code here
+    // Complete a task
+    function toggleComplete(id) {
+        let updatedTodos = [...todos].map((todo) => {
+            if (todo.id === id) {
+                todo.completed = !todo.completed;
+            }
+            return todo;
+        });
 
+        setTodos(updatedTodos);
+    }
 
     // Add the submitEdits code here
 
@@ -49,7 +57,11 @@ const App = () => {
             </form>
             {todos.map((todo) =>
                 <div className="todo" key={todo.id}>
-                    <div className="todo-text">{todo.text}</div>
+                    <div className="todo-text"><
+                        input type="checkbox" id="completed" checked={todo.completed}
+                              onChange={() => toggleComplete(todo.id)}/>
+                        {todo.text}
+                    </div>
                     <button onClick={() => handleDelete(todo.id)}>Delete</button>
                 </div>)}
         </div>
